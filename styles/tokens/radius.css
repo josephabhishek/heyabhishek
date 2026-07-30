@@ -1,0 +1,10 @@
+/* ---------------------------------------------------------------------------
+ * RADIUS
+ * Deliberately minimal. Precision reads through deliberate termination
+ * (Phase 02); softened corners are a decorative signal.
+ * ------------------------------------------------------------------------ */
+@theme {
+  --radius-none: 0;
+  --radius-hairline: 1px;
+  --radius-sm: 2px;
+}

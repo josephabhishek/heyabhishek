@@ -1,0 +1,10 @@
+/* ---------------------------------------------------------------------------
+ * LAYER — z-index
+ * Four layers, capped. Any fifth layer is a design problem, not a token gap.
+ * ------------------------------------------------------------------------ */
+:root {
+  --layer-base: 0;
+  --layer-raised: 10; /* sticky nav      */
+  --layer-overlay: 20; /* magnifier      */
+  --layer-skip: 30; /* skip link        */
+}

@@ -1,0 +1,117 @@
+/* ---------------------------------------------------------------------------
+ * THEME ARCHITECTURE — PLACEHOLDER VALUES
+ *
+ * Final colour is a Design System decision (next sprint). What is fixed here
+ * is the *architecture*:
+ *
+ *   1. Every colour is a semantic token, never a literal, so a theme is a
+ *      value swap and nothing else.
+ *   2. `--accent` is reserved exclusively for DATA AND CHANGE. Colour must
+ *      carry meaning (Phase 02). Nothing decorative may use it.
+ *   3. Themes resolve by `[data-theme]`, falling back to the system
+ *      preference. Adding a theme means adding one block.
+ *   4. Contrast is verified inside the token system, not at QA
+ *      (Phase 04, Deliverable 11).
+ *
+ * Dark mode is NOT an MVP deliverable — a second theme doubles contrast
+ * verification for no business value. The architecture exists so it can be
+ * added in v2 without touching a component.
+ * ------------------------------------------------------------------------ */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* Paper, achieved through VALUE rather than through texture.
+   *
+   * The brief asked for a "subtle paper texture". A texture image or CSS noise
+   * would depict paper rather than be it, which the material ruling prohibits:
+   * materials may be photographed, never simulated. Simulated grain is also a
+   * period style that will date, and it costs bytes on the critical path.
+   *
+   * What actually makes a surface read as paper is that it is warm, slightly
+   * off-white, and NON-LUMINOUS — pure #fff on a modern display glows. These
+   * values carry the quality with no asset, no request and nothing to date. */
+  --surface-page: #fbfaf7;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f3f1ec;
+
+  --ink-primary: #16150f;
+  --ink-secondary: #423f37;
+  --ink-apparatus: #55514a; /* source lines, caveats — content, not fine print */
+
+  --rule-color: #d6d2c8;
+  --rule-color-emphasis: #141414;
+
+  --accent: #1a4bd8; /* DATA AND CHANGE ONLY */
+  --accent-ink: #ffffff;
+
+  --focus-ring: #141414;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --surface-page: #12110f;
+  --surface-raised: #1a1815;
+  --surface-sunken: #0b0a09;
+
+  --ink-primary: #f2f0eb;
+  --ink-secondary: #bab6ad;
+  --ink-apparatus: #9d998f;
+
+  --rule-color: #33302b;
+  --rule-color-emphasis: #f2f0eb;
+
+  --accent: #7ba1ff;
+  --accent-ink: #12110f;
+
+  --focus-ring: #f2f0eb;
+}
+
+/* System preference, only when no explicit theme is set. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --surface-page: #12110f;
+    --surface-raised: #1a1815;
+    --surface-sunken: #0b0a09;
+
+    --ink-primary: #f2f0eb;
+    --ink-secondary: #bab6ad;
+    --ink-apparatus: #9d998f;
+
+    --rule-color: #33302b;
+    --rule-color-emphasis: #f2f0eb;
+
+    --accent: #7ba1ff;
+    --accent-ink: #12110f;
+
+    --focus-ring: #f2f0eb;
+  }
+}
+
+/* Forced colours: rules must survive, so they are never colour-only.
+ * Phase 04, Deliverable 11. */
+@media (forced-colors: active) {
+  :root {
+    --rule-color: CanvasText;
+    --rule-color-emphasis: CanvasText;
+    --focus-ring: Highlight;
+  }
+}
+
+/* Expose semantic tokens to Tailwind utilities. */
+@theme inline {
+  --color-surface-page: var(--surface-page);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-ink-primary: var(--ink-primary);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-apparatus: var(--ink-apparatus);
+  --color-rule: var(--rule-color);
+  --color-rule-emphasis: var(--rule-color-emphasis);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+}

@@ -1,0 +1,23 @@
+/* ---------------------------------------------------------------------------
+ * MOTION
+ * Three durations, two easings. Cap is eight patterns total (Phase 02).
+ * Read by GSAP at runtime via animations/tokens.ts — CSS is the single
+ * source of truth, so there is no duplicated value to drift.
+ * ------------------------------------------------------------------------ */
+:root {
+  --duration-instant: 0ms; /* reduced-motion resolution */
+  --duration-quick: 180ms; /* disclosure                */
+  --duration-considered: 420ms; /* comparison, connection */
+
+  --ease-standard: cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Reduced motion collapses duration to zero. Nothing is lost but movement:
+ * information never lives in an animation (Phase 04, Deliverable 11). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-quick: 0ms;
+    --duration-considered: 0ms;
+  }
+}

@@ -1,0 +1,63 @@
+/* ---------------------------------------------------------------------------
+ * EDITORIAL RHYTHM
+ *
+ * Vertical rhythm is derived from line-height, not invented. Every value below
+ * resolves to a multiple of the 4px base scale, so the rhythm and the spacing
+ * system cannot drift apart.
+ *
+ * No baseline grid. A true baseline grid is brittle in CSS the moment an image,
+ * a table or a variable-height annotation enters the flow — and this document
+ * type is made almost entirely of those. Consistent *relationships* survive;
+ * a rigid grid does not.
+ * ------------------------------------------------------------------------ */
+
+:root {
+  /* Space between paragraphs in the same voice. Roughly 0.75 of a line, so
+   * paragraphs group visibly without separating. */
+  --rhythm-paragraph: 0.75rem; /* 12px */
+
+  /* A heading binds to what FOLLOWS it. Asymmetric space is what makes that
+   * relationship legible: generous above, tight below. This single rule does
+   * more for document structure than any size decision. */
+  --rhythm-heading-above: 3rem; /* 48px */
+  --rhythm-heading-below: 0.75rem; /* 12px */
+
+  /* Apparatus sits close to what it describes. A source line adrift from its
+   * exhibit stops being provenance and becomes decoration. */
+  --rhythm-apparatus: 0.5rem; /* 8px */
+
+  /* An annotation is adjacent to its referent, never floating. On narrow
+   * screens this is the space that marks the register break. */
+  --rhythm-annotation: 1rem; /* 16px */
+
+  /* Space before a list, and between its items. */
+  --rhythm-list: 1rem; /* 16px */
+  --rhythm-list-item: 0.5rem; /* 8px */
+
+  /* Rule inset: how far a marginal rule sits from the text it marks. */
+  --rhythm-rule-inset: 1rem; /* 16px */
+}
+
+/* ---------------------------------------------------------------------------
+ * INFORMATION DENSITY
+ *
+ * Density is deliberately NOT uniform. Dense evidence inside generous space is
+ * the target; uniform airiness is the current default everywhere else and
+ * reads as empty rather than confident.
+ *
+ * These tokens let a component declare which of three densities it belongs to,
+ * so the alternation is a system decision rather than a per-component whim.
+ * ------------------------------------------------------------------------ */
+:root {
+  /* Compressed — ledgers, tables, source lines, apparatus. The instrument. */
+  --density-compressed-leading: var(--leading-apparatus);
+  --density-compressed-gap: var(--spacing-2);
+
+  /* Standard — prose, annotation. The reading surface. */
+  --density-standard-leading: var(--leading-prose);
+  --density-standard-gap: var(--rhythm-paragraph);
+
+  /* Expanded — exhibits, the single figure, the open question. The museum. */
+  --density-expanded-leading: var(--leading-title);
+  --density-expanded-gap: var(--spacing-8);
+}

@@ -1,0 +1,237 @@
+/* ---------------------------------------------------------------------------
+ * EDITORIAL RHYTHM — APPLIED
+ *
+ * Scoped to [data-editorial] so the rhythm applies to authored prose and
+ * nowhere else. Interface surfaces must not inherit document spacing, and
+ * document spacing must not be re-declared per component.
+ *
+ * This is the implementation of the rhythm decisions in tokens/rhythm.css.
+ * The Prose and Document components (Sprint 02) set the attribute; they do not
+ * redefine any of these values.
+ * ------------------------------------------------------------------------ */
+
+[data-editorial] {
+  font-family: var(--font-evidence);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  font-variant-numeric: var(--numeric-prose);
+  max-width: var(--measure-prose);
+}
+
+[data-editorial] p + p {
+  margin-top: var(--rhythm-paragraph);
+}
+
+/* A heading binds to what follows it: generous above, tight below. */
+[data-editorial] :is(h2, h3, h4) {
+  margin-top: var(--rhythm-heading-above);
+  margin-bottom: var(--rhythm-heading-below);
+}
+
+[data-editorial] :is(h2, h3, h4):first-child {
+  margin-top: 0;
+}
+
+[data-editorial] :is(ul, ol) {
+  margin-top: var(--rhythm-list);
+  margin-bottom: var(--rhythm-list);
+  padding-left: var(--spacing-6);
+}
+
+[data-editorial] li + li {
+  margin-top: var(--rhythm-list-item);
+}
+
+/* Emphasis is a change of voice, never a change of volume. In the evidence
+ * register that means italic; bold is not used inside prose. */
+[data-editorial] em {
+  font-style: italic;
+}
+
+[data-editorial] strong {
+  font-weight: var(--weight-medium);
+}
+
+/* ---------------------------------------------------------------------------
+ * THE ANNOTATION REGISTER
+ *
+ * Italic by default, narrow measure, marked by a rule rather than by a colour
+ * or a box. On narrow screens the rule and the indent are what make the
+ * register break legible in a single vertical column — which is the canonical
+ * reading, not a fallback.
+ * ------------------------------------------------------------------------ */
+
+[data-register='annotation'] {
+  font-family: var(--font-annotation);
+  font-style: italic;
+  font-size: var(--text-body);
+  line-height: var(--leading-annotation);
+  max-width: var(--measure-annotation);
+  color: var(--ink-secondary);
+}
+
+/* Inline form: the canonical mobile treatment. A leading rule and an indent,
+ * because a border survives forced-colors mode where a background would not. */
+[data-register='annotation'][data-inline] {
+  border-left: var(--rule-regular) solid var(--rule-color);
+  padding-left: var(--rhythm-rule-inset);
+  margin-block: var(--rhythm-annotation);
+  max-width: var(--measure-prose);
+}
+
+/* Emphasis inside an annotation returns to upright — a plainer voice inside
+ * an already-personal one. */
+[data-register='annotation'] em {
+  font-style: normal;
+}
+
+/* ---------------------------------------------------------------------------
+ * THE APPARATUS
+ *
+ * Source lines, captions and caveats are CONTENT, not fine print. They are set
+ * one step down from prose and are never greyed into invisibility, never
+ * italicised to look incidental, and never tucked below the fold of a figure.
+ *
+ * They are distinguished by POSITION and STRUCTURE, not by diminishment.
+ * ------------------------------------------------------------------------ */
+
+[data-apparatus] {
+  font-family: var(--font-evidence);
+  font-size: var(--text-apparatus);
+  line-height: var(--leading-apparatus);
+  font-variant-numeric: var(--numeric-tabular);
+  color: var(--ink-apparatus);
+  max-width: var(--measure-caption);
+}
+
+[data-apparatus] + [data-apparatus] {
+  margin-top: var(--rhythm-apparatus);
+}
+
+/* ---------------------------------------------------------------------------
+ * DENSITY
+ * Declared, not improvised. See tokens/rhythm.css.
+ * ------------------------------------------------------------------------ */
+
+[data-density='compressed'] {
+  line-height: var(--density-compressed-leading);
+  font-variant-numeric: var(--numeric-tabular);
+}
+
+[data-density='standard'] {
+  line-height: var(--density-standard-leading);
+}
+
+[data-density='expanded'] {
+  line-height: var(--density-expanded-leading);
+}
+
+/* ---------------------------------------------------------------------------
+ * DISCLOSURE
+ *
+ * Native <details>/<summary>, styled. Zero JavaScript.
+ *
+ * The open/close transition uses `interpolate-size` and `::details-content`,
+ * which are progressive: where unsupported the disclosure still opens and
+ * closes instantly and correctly. Under `prefers-reduced-motion` the
+ * transition is removed entirely — see tokens/motion.css, where the duration
+ * tokens resolve to 0ms.
+ * ------------------------------------------------------------------------ */
+
+[data-disclosure] > summary {
+  list-style: none;
+}
+
+[data-disclosure] > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A real affordance, drawn from the rule system rather than an icon font. */
+[data-disclosure] > summary::before {
+  content: '+';
+  display: inline-block;
+  width: 1em;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-disclosure][open] > summary::before {
+  content: '−';
+}
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  [data-disclosure]::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--duration-quick) var(--ease-standard),
+      content-visibility var(--duration-quick) allow-discrete;
+  }
+
+  [data-disclosure][open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * EVIDENCE COMPONENTS
+ * Structural only. Every value comes from a token.
+ * ------------------------------------------------------------------------ */
+
+[data-frame] + [data-frame] {
+  margin-top: var(--space-pause);
+}
+
+/* Media fills its frame edge to edge; the rule is the frame, not a mount. */
+[data-frame='standard'] > div > :is(img, video),
+[data-frame='bare'] > div > :is(img, video) {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+[data-metric] + [data-metric] {
+  margin-top: var(--space-distinct);
+}
+
+[data-ledger] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The annotation face is optically sized where the axis exists. */
+[data-register='annotation'] {
+  font-optical-sizing: var(--optical-sizing);
+}
+
+/* ---------------------------------------------------------------------------
+ * MARGIN FIELD — narrow-viewport behaviour
+ *
+ * Below the desktop breakpoint the annotation column collapses to full width
+ * (see tokens/grid.css). Without this rule a `placement="margin"` annotation
+ * would arrive on a phone as italic serif with no register break at all —
+ * losing precisely the treatment that makes it legible as a different voice.
+ *
+ * Applying it here rather than asking the caller to switch a prop means the
+ * component cannot be used incorrectly.
+ * ------------------------------------------------------------------------ */
+@media (width < 64rem) {
+  [data-margin-field] [data-register='annotation'] {
+    border-left: var(--rule-regular) solid var(--rule-color);
+    padding-left: var(--rhythm-rule-inset);
+    margin-block: var(--rhythm-annotation);
+    max-width: var(--measure-prose);
+  }
+}
+
+/* The caveat carries a rule so it cannot merge with the denominator line
+ * above it. It is apparatus, so it keeps the apparatus register — the rule is
+ * what marks it as the binding statement rather than a size change. */
+[data-caveat] {
+  border-left: var(--rule-regular) solid var(--rule-color);
+  padding-left: var(--rhythm-rule-inset);
+}

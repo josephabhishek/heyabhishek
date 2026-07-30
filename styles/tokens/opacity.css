@@ -1,0 +1,10 @@
+/* ---------------------------------------------------------------------------
+ * OPACITY
+ * Opacity is never used to de-emphasise the editorial apparatus. Source
+ * lines and caveats are content, not fine print (Phase 02, Rule 1).
+ * ------------------------------------------------------------------------ */
+:root {
+  --opacity-hidden: 0;
+  --opacity-scrim: 0.9;
+  --opacity-full: 1;
+}

@@ -1,0 +1,91 @@
+/* ---------------------------------------------------------------------------
+ * FONT LOADING
+ *
+ * Self-hosted, latin-subset, variable. No font CDN: a third-party request on
+ * the critical path is not acceptable against a 1.8s LCP budget.
+ *
+ * Four faces, two families. The budget is 100KB total, enforced by
+ * `npm run check:budgets`. See public/fonts/README.md for the exact download
+ * and subsetting commands.
+ *
+ * `font-display: swap` is deliberate. The fallback stacks in typography.css
+ * are metric-adjusted below so the swap does not shift layout — a font swap
+ * that moves text is a CLS failure, and CLS is a hard gate.
+ *
+ * If the font files are absent, everything still works: the fallback stacks
+ * render and the site remains fully legible. Nothing in this project depends
+ * on a font being present.
+ *
+ * `format('woff2')` is correct for variable WOFF2. The older
+ * `format('woff2-variations')` keyword is deprecated and is rejected by
+ * current parsers, which would silently disable the face.
+ * ------------------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-latin.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20B9, U+2122, U+2212;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-latin-italic.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: italic;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20B9, U+2122, U+2212;
+}
+
+/* The annotation face ships ITALIC FIRST, because the Margin Voice is set in
+ * italic by default. The upright is loaded only for emphasis inside an
+ * annotation, where the emphasis reads as a return to a plainer voice. */
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/newsreader-latin-italic.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: italic;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20B9, U+2122, U+2212;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/newsreader-latin.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2074, U+20B9, U+2122, U+2212;
+}
+
+/* ---------------------------------------------------------------------------
+ * METRIC-ADJUSTED FALLBACKS
+ *
+ * These make the fallback occupy nearly the same space as the web font, so the
+ * swap does not reflow. Values are starting points measured against the two
+ * families; verify with a real swap test before launch and adjust.
+ * ------------------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'IBM Plex Sans Fallback';
+  src: local('Arial'), local('Helvetica Neue'), local('Liberation Sans');
+  size-adjust: 101%;
+  ascent-override: 92%;
+  descent-override: 24%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Newsreader Fallback';
+  src: local('Georgia'), local('Times New Roman'), local('Liberation Serif');
+  size-adjust: 103%;
+  ascent-override: 94%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+}

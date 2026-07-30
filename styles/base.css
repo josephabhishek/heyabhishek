@@ -1,0 +1,109 @@
+/* ---------------------------------------------------------------------------
+ * BASE
+ * Minimal, structural. No visual language here — that is the Design System.
+ * ------------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--surface-page);
+  color: var(--ink-primary);
+  font-family: var(--font-evidence);
+  font-size: var(--text-body);
+  line-height: var(--leading-prose);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* No fixed-height containers around text: 400% zoom must reflow without
+ * horizontal scroll (Phase 04, Deliverable 11). */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Figures align in columns wherever numbers are COMPARED. Running prose keeps
+ * proportional figures, where tabular reads as gappy and mechanical. Applied
+ * by the Metric and Ledger components, never globally. */
+table,
+[data-numeric='tabular'] {
+  font-variant-numeric: var(--numeric-tabular);
+}
+
+[data-numeric='prose'] {
+  font-variant-numeric: var(--numeric-prose);
+}
+
+/* Focus is always visible. `outline: none` is a lint-level offence here. */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Respect reduced motion globally as a floor; individual patterns also
+ * declare their own reduced-motion variant. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print: linear, high contrast, no interface chrome.
+ * CEOs and recruiters print and forward things (Phase 04, I-10). */
+@media print {
+  [data-print='hide'] {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  a::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.9em;
+  }
+}

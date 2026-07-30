@@ -1,0 +1,11 @@
+/* ---------------------------------------------------------------------------
+ * BREAKPOINTS
+ * Mobile is the canonical design target (Phase 04, Deliverable 09).
+ * These exist so JS and CSS agree; prefer container queries where possible.
+ * ------------------------------------------------------------------------ */
+@theme {
+  --breakpoint-sm: 30rem; /*  480px */
+  --breakpoint-md: 48rem; /*  768px — tablet, 8 col   */
+  --breakpoint-lg: 64rem; /* 1024px — desktop, 12 col */
+  --breakpoint-xl: 90rem; /* 1440px — wide            */
+}

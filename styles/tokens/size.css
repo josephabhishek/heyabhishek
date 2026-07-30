@@ -1,0 +1,46 @@
+/* ---------------------------------------------------------------------------
+ * SIZE — layout measures
+ * `measure` values are reading lengths, not container widths. Text is never
+ * set to full viewport width (Phase 02, precision behaviour 6).
+ * ------------------------------------------------------------------------ */
+:root {
+  /* Measures are READING LENGTHS, revised in Sprint 01.5.
+   *
+   * `ch` is the width of the digit zero, which in both chosen families is
+   * wider than the average lowercase character. 68ch therefore rendered at
+   * roughly 75 characters — above the comfortable range. 62ch lands at
+   * ~66-70 characters, which is where sustained reading is easiest.
+   *
+   * The annotation measure is deliberately narrow. Marginalia is read in
+   * short bursts beside something else; a wide annotation competes with the
+   * evidence instead of accompanying it. */
+  --measure-prose: 62ch;
+  --measure-annotation: 34ch;
+  --measure-caption: 48ch;
+  --measure-ledger: 100%;
+
+  --content-max: 82.5rem; /* 1320px — content stops, margins grow */
+  --container-gutter: var(--spacing-4);
+  --container-margin: var(--spacing-5); /* 20px mobile */
+
+  --touch-min: 2.75rem; /* 44px — WCAG 2.2 AA target minimum */
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --container-gutter: var(--spacing-6);
+    --container-margin: var(--spacing-10); /* 40px */
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --container-margin: var(--spacing-16); /* 64px */
+  }
+}
+
+@media (min-width: 90rem) {
+  :root {
+    --container-gutter: var(--spacing-8);
+  }
+}

@@ -1,0 +1,32 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# build
+.next
+out
+build
+dist
+
+# misc
+.DS_Store
+*.pem
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# env
+.env
+.env.local
+.env*.local
+
+# test / tooling
+coverage
+.eslintcache
+
+# source media (kept out of git; see docs/CONTENT_WORKFLOW.md)
+/media-source
+
+# fonts are generated from the Fontsource packages by scripts/install-fonts.mjs
+/public/fonts/*.woff2

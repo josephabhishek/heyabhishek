@@ -1,0 +1,14 @@
+/* ---------------------------------------------------------------------------
+ * ELEVATION
+ * No drop shadows. Weight is expressed through space and scale, never
+ * through simulated depth (Phase 02, material ruling). Separation is a rule.
+ * ------------------------------------------------------------------------ */
+:root {
+  --rule-hairline: 1px;
+  --rule-regular: 1.5px;
+  --rule-emphasis: 2px;
+
+  /* The single permitted shadow: focus offset only, never for depth. */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}

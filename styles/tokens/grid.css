@@ -1,0 +1,26 @@
+/* ---------------------------------------------------------------------------
+ * GRID — column allocation per breakpoint (Phase 04, Deliverable 03)
+ * Mobile 4 · Tablet 8 · Desktop 12. The annotation field occupies the last
+ * four desktop columns; below 64rem the annotation is inline.
+ * ------------------------------------------------------------------------ */
+:root {
+  --grid-columns: 4;
+  --grid-evidence-span: 4;
+  --grid-annotation-span: 0; /* inline */
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --grid-columns: 8;
+    --grid-evidence-span: 8;
+    --grid-annotation-span: 0; /* still inline */
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --grid-columns: 12;
+    --grid-evidence-span: 8;
+    --grid-annotation-span: 4; /* margin field activates */
+  }
+}
