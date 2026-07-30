@@ -25,3 +25,4 @@ export { VisuallyHidden } from './visually-hidden';
 export { SkipLink } from './skip-link';
 export { Disclosure, type DisclosureProps } from './disclosure';
 export { EmptyState, type EmptyStateProps } from './empty-state';
+export { ScrollHint, type ScrollHintProps } from './scroll-hint';

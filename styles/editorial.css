@@ -235,3 +235,212 @@
   border-left: var(--rule-regular) solid var(--rule-color);
   padding-left: var(--rhythm-rule-inset);
 }
+
+/* ---------------------------------------------------------------------------
+ * FIRST IMPRESSION — micro-interactions
+ *
+ * All CSS. No JavaScript, no timeline library. Every effect below is either
+ * absent or complete under `prefers-reduced-motion`; none of them carries
+ * information, so nothing is lost when they do not run.
+ * ------------------------------------------------------------------------ */
+
+/* Hover refinement. The underline thickens and drops rather than appearing —
+ * a link that is already underlined does not need to announce itself again. */
+a {
+  text-underline-offset: 0.2em;
+  transition:
+    text-decoration-color var(--duration-quick) var(--ease-standard),
+    text-underline-offset var(--duration-quick) var(--ease-standard);
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: var(--rule-color-emphasis);
+    text-underline-offset: 0.28em;
+  }
+}
+
+/* Focus transition. The ring appears without moving anything, so a keyboard
+ * user sweeping through the page does not see the layout twitch. */
+:focus-visible {
+  transition: outline-color var(--duration-quick) var(--ease-standard);
+}
+
+/* Button polish: the rule darkens. No lift, no shadow, no scale — depth in
+ * this system comes from photography, never from simulated elevation. */
+button {
+  transition: border-color var(--duration-quick) var(--ease-standard);
+}
+
+@media (hover: hover) {
+  button:hover:not(:disabled) {
+    border-color: var(--rule-color-emphasis);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * SCROLL HINT
+ * A rule that lengthens. Not an arrow that bounces — a bouncing arrow asks the
+ * reader to keep going; a rule simply states that the document continues.
+ * ------------------------------------------------------------------------ */
+
+[data-scroll-hint-rule] {
+  display: block;
+  block-size: var(--rule-hairline);
+  inline-size: var(--spacing-16);
+  background-color: var(--rule-color);
+}
+
+/* NO ANIMATION HERE, DELIBERATELY.
+ *
+ * A looping pulse was written and then removed in self-review. It failed the
+ * project's own motion rule: every pattern must do one of three jobs —
+ * connect, compare or disclose — and an infinite loop does none of them. It is
+ * decoration, and worse, a pulsing element is an anxiety signal: it asks the
+ * reader to keep going.
+ *
+ * A rule at fixed length already states that the document continues. That is
+ * the whole information, and it does not need to move to deliver it. */
+
+/* ---------------------------------------------------------------------------
+ * GENTLE REVEALS
+ *
+ * Scroll-driven, and driven entirely by the browser. `animation-timeline` runs
+ * off the compositor with no scroll listener, no observer and no JavaScript at
+ * all — which is both the cheapest and the smoothest option available.
+ *
+ * Where unsupported, elements are simply visible from the start. Nothing is
+ * hidden behind an effect that might not run: an element that never reveals
+ * because a feature is missing is a content failure, not a motion failure.
+ *
+ * DECLARED EXCEPTION. This is the only motion in the system that cannot name
+ * one of the three permitted jobs (connect, compare, disclose). It is an
+ * entrance, and by the project's own rule an entrance does not ship.
+ *
+ * It is here because it was explicitly requested, and it is recorded as an
+ * exception rather than justified by quietly stretching the definition of
+ * "disclose". It costs nothing, runs on the compositor with no JavaScript, and
+ * removing it is deleting this one block. If the motion budget is ever
+ * contested, this goes first.
+ * ------------------------------------------------------------------------ */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: gentle-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 26%;
+    }
+
+    @keyframes gentle-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(var(--spacing-2));
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * HERO ENVIRONMENT
+ *
+ * The photograph sits behind the text. A scrim keeps body copy at full
+ * contrast over it — contrast is a hard gate, and a beautiful photograph that
+ * costs legibility has failed.
+ * ------------------------------------------------------------------------ */
+
+[data-hero-layer]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--surface-page) 0%,
+    color-mix(in srgb, var(--surface-page) 82%, transparent) 45%,
+    var(--surface-page) 100%
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * THE TRANSFORMATION — DOCUMENT BECOMES WORKSPACE
+ *
+ * This is the concept's load-bearing idea, and it is deliberately NOT an
+ * effect. A briefing document is formal, centred in its own field, and reads
+ * top to bottom. A working surface is asymmetric, annotated in the margin, and
+ * has evidence pinned beside the reasoning.
+ *
+ * The site moves from the first to the second as the reader descends. The
+ * transformation is STRUCTURAL — measure, field, and where annotation lives —
+ * so it happens with no assets, no JavaScript and no animation, and it is
+ * fully present for a reader with motion disabled or images off.
+ *
+ * A photograph of the real desk, when one exists, fades in behind the later
+ * chapters as atmosphere. It deepens the transformation; it never carries it.
+ * ------------------------------------------------------------------------ */
+
+/* THE DOCUMENT REGISTER — the opening chapter.
+ * Formal. Fields and values. Annotation stays inline, in sequence, because a
+ * brief is read in order and nothing sits in its margin yet. */
+[data-register-document] [data-register='annotation'] {
+  max-width: var(--measure-prose);
+}
+
+[data-register-document] dl {
+  font-variant-numeric: var(--numeric-tabular);
+}
+
+/* THE WORKING REGISTER — everything below the opening.
+ * The margin field activates, evidence gains its pause, and annotation moves
+ * beside the thing it refers to. Nothing animates; the layout simply is
+ * different, and the reader feels the change as a shift in how the page is
+ * organised rather than as a transition. */
+[data-register-work] [data-margin-field] {
+  align-items: start;
+}
+
+/* The chapter boundary where the register changes. A rule, not a divider
+ * flourish: the document has ended and the work has begun. */
+[data-register-work]::before {
+  content: '';
+  display: block;
+  block-size: var(--rule-hairline);
+  inline-size: 100%;
+  background-color: var(--rule-color);
+  margin-block-end: var(--space-beat);
+}
+
+/* THE ENVIRONMENT EMERGES.
+ *
+ * Scroll-driven, compositor-only, zero JavaScript. The desk photograph is
+ * absent at the cover and reaches its (still low) maximum by the time the
+ * reader is inside the investigation.
+ *
+ * Under reduced motion, and where scroll-driven animation is unsupported, the
+ * environment simply sits at its resting opacity from the start. Nothing is
+ * hidden behind an effect that might not run. */
+[data-hero-layer] {
+  opacity: 0.5;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-hero-layer] {
+      animation: environment-emerges linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0% 60%;
+    }
+
+    @keyframes environment-emerges {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 0.5;
+      }
+    }
+  }
+}

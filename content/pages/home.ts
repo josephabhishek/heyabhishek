@@ -21,10 +21,28 @@ export const home = {
       'I build business websites, then measure what they earn. Every number on this site is sourced, and includes the ones that disappointed me.',
   },
 
-  hero: {
-    problem: 'Most websites are a cost nobody measured.',
-    subheading:
-      'I build them, instrument them, and then tell you what they actually earned — including when the answer is disappointing.',
+  /**
+   * The opening chapter. A briefing document, not a hero.
+   *
+   * Register note: fields are stated plainly. There is no "CONFIDENTIAL" stamp
+   * and no redaction — those are costume, and a document that pretends to be
+   * secret while sitting on a public URL is making a claim it cannot support.
+   */
+  brief: {
+    /** The visitor's category. Addressed to a situation, not to a person. */
+    subject: 'Independent businesses that are found before they are called',
+    /** The finding, stated as a finding. */
+    headline: 'Most websites are a cost nobody measured.',
+    /** Executive summary. One paragraph. */
+    summary:
+      'I build business websites, instrument them, and then tell you what they earned — including when the answer is disappointing. This document explains the method and shows the evidence behind it.',
+    /** A human voice at close range. The first warmth on the page. */
+    annotation:
+      'Almost every site in this category opens by telling you how good its owner is. I would rather open with the thing that is probably costing you money.',
+    /** Default addressee, until the visitor names themselves. */
+    preparedForFallback: 'Owner-operated businesses in India',
+    /** Honest status. Understates deliberately; the numbers are small and said so. */
+    status: 'Three live clients. First case study in preparation.',
   },
 
   story: {

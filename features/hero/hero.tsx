@@ -1,97 +1,133 @@
 import type { ReactNode } from 'react';
 import { Container } from '@/components/layout';
-import { Heading, Text } from '@/components/ui';
+import { Heading, ScrollHint, Text } from '@/components/ui';
+import { HeroEnvironment } from './hero-environment';
 import { cn } from '@/lib/cn';
 
 /**
- * Hero — the framework, not yet the performance.
+ * Hero — the first impression.
  *
- * The first screen must deliver a complete argument in about eleven seconds
- * **without requiring reading**: a problem the visitor recognises, one piece of
- * real evidence, and the impression of care. Everything below the fold is
- * elaboration for those who want it.
+ * The first screen must answer four questions **through composition rather
+ * than paragraphs**: who this is, what they do, why they can be trusted, and
+ * why the approach differs. It has roughly eleven seconds, and most of that
+ * judgement is formed pre-attentively — from space, alignment and restraint —
+ * before a word is read.
  *
- * ### What is deliberately absent
- * No logo in the first viewport, and no call to action. Both are choices, not
- * omissions: the space is worth more spent on the visitor's problem, and a CTA
- * in the first screen is an admission that you expect them to leave.
+ * ### Reading order, and why it is this order
  *
- * ### LCP
- * The largest contentful element is the **problem statement — text, not an
- * image**. That is what makes a sub-1.8s LCP achievable on a mid-range phone
- * over 4G, and it must be preserved. Do not put a hero image above this text.
+ * ```
+ * 1  problem      the visitor's situation, in their language
+ * 2  practice     what this is, stated once, plainly
+ * 3  annotation   a human voice, at close range
+ * 4  evidence     one real artefact
+ * 5  action       one link, no urgency
+ * 6  scroll hint  the document continues
+ * ```
  *
- * ### Motion hooks
- * `data-motion="hero"` and the `data-motion-part` attributes are attachment
- * points for Sprint 04. They carry no behaviour now. Nothing in this component
- * animates, and everything it says is fully legible with motion disabled —
- * information never lives in an animation.
+ * The problem comes before the practitioner because every competitor opens
+ * with themselves; that pattern break is what earns the second screen. The
+ * annotation is what stops the composition reading as cold — the system is
+ * austere at a distance and warm up close, and this is the first place that
+ * warmth appears.
  *
- * ### Background layers
- * `data-hero-layer` exists so a later sprint can introduce depth without
- * restructuring the markup. It renders nothing today.
+ * ### LCP is the headline
+ * Text, not an image. Preserve that. The environment photograph is lazy,
+ * behind the content, and never `priority`. A hero image above this text would
+ * cost roughly a second on a mid-range Android over 4G, and the whole
+ * proposition is that this practice does not do that to people.
+ *
+ * ### Motion
+ * No GSAP, no timeline, no JavaScript. Reveals are CSS scroll-driven where the
+ * browser supports it, and simply absent where it does not. Everything is
+ * fully legible with motion disabled.
  */
 export interface HeroProps {
   /** The problem, in the visitor's language. Twelve words or fewer. */
   readonly problem: ReactNode;
-  /** One line of specificity: what this practice does about it. */
-  readonly subheading?: ReactNode;
-  /** One real artefact. A Pair, an Exhibit, or a Metric. */
-  readonly evidence?: ReactNode;
-  /** The Margin Voice, if the opening warrants one. */
+  /** What this practice is. One sentence, no adjectives. */
+  readonly practice?: ReactNode;
+  /** A human voice at close range. Short. */
   readonly annotation?: ReactNode;
+  /** One real artefact — a Metric or a Pair. Omitted until one exists. */
+  readonly evidence?: ReactNode;
+  /** One action. Never an imperative with urgency. */
+  readonly action?: ReactNode;
   readonly className?: string;
 }
 
-export function Hero({ problem, subheading, evidence, annotation, className }: HeroProps) {
+export function Hero({ problem, practice, annotation, evidence, action, className }: HeroProps) {
   return (
     <section
       data-motion="hero"
       aria-labelledby="hero-problem"
       className={cn('relative isolate', className)}
     >
-      {/* Reserved for depth in a later sprint. Renders nothing and costs
-          nothing today; it exists so the markup does not need restructuring. */}
-      <div
-        data-hero-layer="base"
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
-      />
+      <HeroEnvironment />
 
       <Container>
-        <div className="pt-[var(--space-beat)] pb-[var(--space-pause)]">
-          <Heading
-            id="hero-problem"
-            level={1}
-            scale="display"
-            data-motion-part="problem"
-            className="max-w-[16ch] text-balance"
-          >
-            {problem}
-          </Heading>
-
-          {subheading ? (
-            <Text
-              as="p"
-              size="lead"
-              data-motion-part="subheading"
-              className="mt-[var(--space-related)] max-w-[var(--measure-prose)]"
+        <div
+          data-hero-composition=""
+          className={cn(
+            // Intentional per breakpoint, not a scaled desktop layout.
+            // 360: single column, tight top space, the headline dominates.
+            // 768: more air above, measure widens.
+            // 1024+: the composition sits in the evidence columns, leaving the
+            //        annotation field empty — the asymmetry is established
+            //        before it carries content, which is what makes the field
+            //        read as a system rather than an accident.
+            'pt-[var(--space-beat)] pb-[var(--space-pause)]',
+            'md:pt-[var(--space-pause)]',
+            'lg:grid lg:gap-[var(--container-gutter)]',
+          )}
+          style={{ gridTemplateColumns: 'repeat(var(--grid-columns), minmax(0, 1fr))' }}
+        >
+          <div className="lg:col-span-8" style={{ gridColumn: 'span var(--grid-evidence-span)' }}>
+            <Heading
+              id="hero-problem"
+              level={1}
+              scale="display"
+              data-motion-part="problem"
+              className="max-w-[15ch] text-pretty"
             >
-              {subheading}
-            </Text>
-          ) : null}
+              {problem}
+            </Heading>
 
-          {evidence ? (
-            <div data-motion-part="evidence" className="mt-[var(--space-pause)]">
-              {evidence}
-            </div>
-          ) : null}
+            {practice ? (
+              <Text
+                as="p"
+                size="lead"
+                data-motion-part="practice"
+                data-reveal=""
+                className="mt-[var(--space-related)] max-w-[var(--measure-prose)]"
+              >
+                {practice}
+              </Text>
+            ) : null}
 
-          {annotation ? (
-            <div data-motion-part="annotation" className="mt-[var(--space-related)]">
-              {annotation}
-            </div>
-          ) : null}
+            {annotation ? (
+              <div
+                data-motion-part="annotation"
+                data-reveal=""
+                className="mt-[var(--space-distinct)]"
+              >
+                {annotation}
+              </div>
+            ) : null}
+
+            {evidence ? (
+              <div data-motion-part="evidence" data-reveal="" className="mt-[var(--space-pause)]">
+                {evidence}
+              </div>
+            ) : null}
+
+            {action ? (
+              <div data-motion-part="action" className="mt-[var(--space-distinct)]">
+                {action}
+              </div>
+            ) : null}
+
+            <ScrollHint className="mt-[var(--space-pause)]" />
+          </div>
         </div>
       </Container>
     </section>
