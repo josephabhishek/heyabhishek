@@ -1,8 +1,11 @@
 # Portfolio
 
-A production Next.js application. Sprint 01 delivers the **foundation only** —
-architecture, configuration, tokens, primitives and the content contract. There
-is no homepage, no navigation UI, no animations and no content, by design.
+A production Next.js application.
+
+Built to date: the project foundation, the editorial design system, and the
+homepage foundation. There is no cinematic storytelling and no published
+content yet, by design — the first case study is blocked on decisions recorded
+in `docs/decisions/ADR-0005-open-decisions.md`, not on engineering.
 
 ## Setup
 
@@ -13,8 +16,13 @@ cp .env.example .env.local   # every variable is optional
 npm run dev
 ```
 
-`http://localhost:3000` returns the 404 route. That is correct: no page routes
-exist yet. `/sitemap.xml`, `/robots.txt` and `/manifest.webmanifest` are live.
+`http://localhost:3000` renders the homepage. `/sitemap.xml`, `/robots.txt`
+and `/manifest.webmanifest` are live.
+
+The navigation and footer currently read **TBD**: `config/site.ts` holds the
+name, and the naming decision is still open. The case studies section renders
+an honest empty state — that is production behaviour, and it is what the page
+will show until the first document passes schema validation.
 
 ## Scripts
 

@@ -8,10 +8,14 @@ const nextConfig: NextConfig = {
   // looking at.
   env: { BUILD_TIME: new Date().toISOString() },
 
-  // Fail the production build on type or lint errors. The quality gates are
-  // not advisory; see docs/QUALITY_GATES.md.
+  // Fail the production build on type errors. The quality gates are not
+  // advisory; see docs/QUALITY_GATES.md.
+  //
+  // Next 16 removed the `eslint` key from NextConfig: linting is no longer
+  // part of `next build`. It runs as its own step in `npm run verify` and in
+  // CI, which is stricter — a lint failure now blocks the pipeline rather
+  // than only the build.
   typescript: { ignoreBuildErrors: false },
-  eslint: { ignoreDuringBuilds: false },
 
   // Modern formats only. Exhibits must stay legible after compression, so the
   // per-image budget in config/performance.ts is the binding constraint.

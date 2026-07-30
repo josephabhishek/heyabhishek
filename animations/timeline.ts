@@ -1,9 +1,9 @@
 'use client';
 
+import { gsap } from 'gsap';
 import { registerGsap } from './gsap';
 import { duration, ease, type DurationToken, type EaseToken } from './tokens';
 import { prefersReducedMotion } from './reduced-motion';
-import type gsapType from 'gsap';
 
 /**
  * Timeline helpers.
@@ -13,6 +13,16 @@ import type gsapType from 'gsap';
  * recorded in the timeline's own data so a motion audit can read it.
  */
 export type MotionJob = 'connect' | 'compare' | 'disclose';
+
+/**
+ * The timeline type, derived from the value rather than from a namespace.
+ *
+ * GSAP declares `gsap` as both a const and a namespace. A default type import
+ * cannot carry the namespace meaning, so `gsapType.core.Timeline` does not
+ * resolve. Deriving from `typeof gsap.timeline` is version-proof and needs no
+ * knowledge of GSAP's internal type layout.
+ */
+export type MotionTimeline = ReturnType<typeof gsap.timeline>;
 
 export interface TimelineOptions {
   readonly job: MotionJob;
@@ -28,11 +38,11 @@ export interface TimelineOptions {
  * are applied instantly. Nothing is lost but movement, because information
  * never lives in an animation.
  */
-export function createTimeline(options: TimelineOptions): gsapType.core.Timeline {
-  const gsap = registerGsap();
+export function createTimeline(options: TimelineOptions): MotionTimeline {
+  const instance = registerGsap();
   const reduced = prefersReducedMotion();
 
-  return gsap.timeline({
+  return instance.timeline({
     paused: true,
     id: options.id,
     data: { job: options.job },
@@ -44,7 +54,7 @@ export function createTimeline(options: TimelineOptions): gsapType.core.Timeline
 }
 
 /** Cleanup contract for React effects: every timeline must be revertible. */
-export function disposeTimeline(timeline: gsapType.core.Timeline | null): void {
+export function disposeTimeline(timeline: MotionTimeline | null): void {
   timeline?.revert();
   timeline?.kill();
 }
